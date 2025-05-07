@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-testdemo-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: testdemo-app
+  template:
+    metadata:
+      labels:
+        app: testdemo-app
+    spec:
+      containers:
+      - name: testdemo-app
+        image: myacrrepo1234.azurecr.io/nikit12345/testdemo:v1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9090
+
+        
+# service type loadbalancer       
+---
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: testdemo-app
+  labels:
+    app: testdemo-app
+    k8s-app: testdemo-app
+spec:
+  type: LoadBalancer
+  selector:
+    app: testdemo-app
+  ports:
+    - name: http
+      port: 90
+      targetPort: 9090
+      protocol: TCP
